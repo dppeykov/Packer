@@ -1,0 +1,45 @@
+{
+  "variables": {
+    "oci_fingerprint": "{{env `TF_VAR_fingerprint`}}",
+    "oci_private_key_pass": "{{env `TF_VAR_private_key_password`}}",
+    "oci_tenancy_id": "{{env `TF_VAR_tenancy_ocid`}}",
+    "oci_compartment_id": "{{env `TF_VAR_compartment_ocid`}}",
+    "oci_region": "{{env `TF_VAR_region`}}",
+    "oci_private_key_path": "{{env `TF_VAR_private_key_path`}}",
+    "oci_user_id": "{{env `TF_VAR_user_ocid`}}"
+  },
+  "builders": [{
+    "tenancy_ocid": "{{user `oci_tenancy_id`}}",
+    "region": "{{user `oci_region`}}",
+    "availability_domain": "iPcI:UK-LONDON-1-AD-3",
+    "user_ocid": "{{user `oci_user_id`}}",
+    "base_image_ocid": "ocid1.image.oc1.uk-london-1.aaaaaaaaw5gvriwzjhzt2tnylrfnpanz5ndztyrv3zpwhlzxdbkqsjfkwxaq",
+    "compartment_ocid": "{{user `oci_compartment_id`}}",
+    "fingerprint": "{{user `oci_fingerprint` }}",
+    "pass_phrase": "{{user `oci_private_key_pass`}}",
+    "image_name": "Packer-OEL7-Image-{{timestamp}}",
+    "bootvolumesize": 65,
+    "shape": "VM.Standard.E2.1.Micro",
+    "ssh_username": "opc",
+    "subnet_ocid": "ocid1.subnet.oc1.uk-london-1.aaaaaaaa7kp4gcjitdgyecsenyypqvyferespa3ndgn5sekvy72yxs7ahmra",
+    "type": "oracle-ocisurrogate"
+  }],
+  "provisioners": [
+    {
+      "type": "file",
+      "source": "scripts/bootstrapsurrogatezfs.sh",
+      "destination": "/tmp/bootstrapsurrogatezfs.sh"
+  },
+    {
+      "type": "file",
+      "source": "scripts/cleanup-surrogatezfs.sh",
+      "destination": "/tmp/cleanup-surrogatezfs.sh"
+  },
+    {
+      "type": "file",
+      "source": "scripts/chroot-surrogatezfs.sh",
+      "destination": "/tmp/chroot-surrogatezfs.sh"
+  }
+  ]
+}
+
